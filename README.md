@@ -1,5 +1,5 @@
 # hx-prim
-Haxe implementation of Prim's algorithm.
+Haxe implementation of Prim's algorithm for generating mazes.
 
 Work in progress.
 
