@@ -93,10 +93,10 @@ class Main extends Sprite
 				var opacity = 1.0;
 				switch(maze.cells.get(x, y).type)
 				{
-					case 0: color = 0x000000; opacity = 0;
-					case 1: color = 0xffffff; opacity = 0.1;
-					case 2: color = 0xffffff; opacity = 0.9;
-					case 3: color = 0xffffff; opacity = 1;
+					case CellType.ROOM: color = 0x000000; opacity = 0;
+					case CellType.WALL_OPEN: color = 0xffffff; opacity = 0.1;
+					case CellType.WALL_CLOSED: color = 0xffffff; opacity = 0.9;
+					case CellType.PILLAR: color = 0xffffff; opacity = 1;
 				}
 				if (x == maze.entrance.x && y == maze.entrance.y)
 				{

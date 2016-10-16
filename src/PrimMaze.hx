@@ -17,7 +17,6 @@ class PrimMaze
 		this.width = width;
 		this.height = height;
 		generate();
-		
 	}
 	
 	public function generate():Array2<Cell>
@@ -31,10 +30,10 @@ class PrimMaze
 		{
 			for (x in 0...width)
 			{
-				var type;
-				if (x % 2 == 0 && y % 2 == 0) type = 3;//PILLAR
-				else if ((x % 2 == 0 && y % 2 == 1)|| (x % 2 == 1 && y % 2 == 0))	type = 2;//CLOSED WALL
-				else type = 0;//ROOM
+				var type:Int;
+				if (x % 2 == 0 && y % 2 == 0) type = CellType.PILLAR;//PILLAR
+				else if ((x % 2 == 0 && y % 2 == 1)|| (x % 2 == 1 && y % 2 == 0))	type = CellType.WALL_CLOSED;//CLOSED WALL
+				else type = CellType.ROOM;//ROOM
 				cells.set(x, y, new Cell(x, y, type));
 			}
 		}
@@ -43,19 +42,19 @@ class PrimMaze
 		while (entrance == null)
 		{
 			var cell = cells.get(1+Std.random(width-1), 1+Std.random(height-1));
-			if (cell.type == 0)
+			if (cell.type == CellType.ROOM)
 			{
 				entrance = cell;
 			}
 		}
 		path.push(entrance);
 		
-		walls = walls.concat(getAdjacentCells(cells, entrance, [1, 2]));
+		walls = walls.concat(getAdjacentCells(cells, entrance, [CellType.WALL_OPEN, CellType.WALL_CLOSED]));
 		
 		while (walls.length > 0)
 		{
 			var wall = walls[Std.random(walls.length)];
-			var adjacentRooms = getAdjacentCells(cells, wall, [0]);
+			var adjacentRooms = getAdjacentCells(cells, wall, [CellType.ROOM]);
 			if (adjacentRooms.length >= 2)
 			{
 				var adjacentRoomsNotInPath = adjacentRooms.filter(function(room)
@@ -64,10 +63,10 @@ class PrimMaze
 				});
 				if (adjacentRoomsNotInPath.length == 1)
 				{
-					wall.type = 1;
+					wall.type = CellType.WALL_OPEN;
 					var unvisitedRoom = adjacentRoomsNotInPath[0];
 					path.push(unvisitedRoom);
-					walls = walls.concat(getAdjacentCells(cells, unvisitedRoom, [1, 2]));
+					walls = walls.concat(getAdjacentCells(cells, unvisitedRoom, [CellType.WALL_OPEN, CellType.WALL_CLOSED]));
 				}
 			}
 			walls.splice(walls.indexOf(wall), 1);
