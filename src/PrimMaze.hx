@@ -7,16 +7,31 @@ import de.polygonal.ds.Array2;
  */
 class PrimMaze
 {
+	public var x0(default, null):Int;
+	public var x1(default, null):Int;
+	public var y1(default, null):Int;
 	public var width(default, null):Int;
 	public var height(default, null):Int;
 	public var entrance(default, null):Cell;
 	public var cells(default, null):Array2<Cell>;
 	
-	public function new(width:Int, height:Int)
+	public function new(width:Int, height:Int, x0:Int, x1:Int, y1:Int)
 	{
+		this.x0 = x0;
+		this.x1 = x1;
+		this.y1 = y1;
 		this.width = width;
 		this.height = height;
+		gridColoring();
 		generate();
+	}
+	
+	function gridColoring()
+	{
+		var nbColors = Std.int(Math.abs(x0 * y1));
+		if (nbColors < 3) throw "Grid coloring must have at least 3 colors";
+		
+		
 	}
 	
 	public function generate():Array2<Cell>
