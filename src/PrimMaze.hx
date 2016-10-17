@@ -20,11 +20,7 @@ class PrimMaze
 	
 	public function generate():Array<Array<Cell>>
 	{
-		cells = [];
-		for (i in 0...width)
-		{
-			cells[i] = [];
-		}
+		cells = [for (i in 0...width)[]];
 		
 		var path = [];
 		var walls = [];
