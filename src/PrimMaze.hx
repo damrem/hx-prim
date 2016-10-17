@@ -1,5 +1,4 @@
 package;
-import de.polygonal.ds.Array2;
 
 /**
  * ...
@@ -10,7 +9,7 @@ class PrimMaze
 	public var width(default, null):Int;
 	public var height(default, null):Int;
 	public var entrance(default, null):Cell;
-	public var cells(default, null):Array2<Cell>;
+	public var cells(default, null):Array<Array<Cell>>;
 	
 	public function new(width:Int, height:Int)
 	{
@@ -19,9 +18,13 @@ class PrimMaze
 		generate();
 	}
 	
-	public function generate():Array2<Cell>
+	public function generate():Array<Array<Cell>>
 	{
-		cells = new Array2<Cell>(width, height);
+		cells = [];
+		for (i in 0...width)
+		{
+			cells[i] = [];
+		}
 		
 		var path = [];
 		var walls = [];
@@ -34,14 +37,14 @@ class PrimMaze
 				if (x % 2 == 0 && y % 2 == 0) type = CellType.PILLAR;//PILLAR
 				else if ((x % 2 == 0 && y % 2 == 1)|| (x % 2 == 1 && y % 2 == 0))	type = CellType.WALL_CLOSED;//CLOSED WALL
 				else type = CellType.ROOM;//ROOM
-				cells.set(x, y, new Cell(x, y, type));
+				cells[x][y] = new Cell(x, y, type);
 			}
 		}
 		
 		entrance = null;
 		while (entrance == null)
 		{
-			var cell = cells.get(1+Std.random(width-1), 1+Std.random(height-1));
+			var cell = cells[1 + Std.random(width - 1)][1 + Std.random(height - 1)];
 			if (cell.type == CellType.ROOM)
 			{
 				entrance = cell;
@@ -75,14 +78,14 @@ class PrimMaze
 		return cells;
 	}
 	
-	function getAdjacentCells(maze:Array2<Cell>, cell:Cell, types:Array<Int>):Array<Cell>
+	function getAdjacentCells(maze:Array<Array<Cell>>, cell:Cell, types:Array<Int>):Array<Cell>
 	{
 		var cells:Array<Cell> = [];
 		
-		if (cell.y > 0)	cells.push(maze.get(cell.x, cell.y - 1));
-		if (cell.x < maze.width - 1)	cells.push(maze.get(cell.x + 1, cell.y));
-		if (cell.y < maze.height - 1)	cells.push(maze.get(cell.x, cell.y + 1));
-		if (cell.x > 0)	cells.push(maze.get(cell.x - 1, cell.y));
+		if (cell.y > 0)	cells.push(maze[cell.x][cell.y - 1]);
+		if (cell.x < width - 1)	cells.push(maze[cell.x + 1][cell.y]);
+		if (cell.y < height - 1)	cells.push(maze[cell.x][cell.y + 1]);
+		if (cell.x > 0)	cells.push(maze[cell.x - 1][cell.y]);
 		
 		return cells.filter(function(cell)
 		{

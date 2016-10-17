@@ -1,7 +1,5 @@
 package;
 
-import de.polygonal.ds.Array2;
-import man.HxPrimMaze;
 import openfl.display.Shape;
 import openfl.display.Sprite;
 import openfl.Lib;
@@ -91,7 +89,7 @@ class Main extends Sprite
 			{
 				var color = 0x000000;
 				var opacity = 1.0;
-				switch(maze.cells.get(x, y).type)
+				switch(maze.cells[x][y].type)
 				{
 					case CellType.ROOM: color = 0x000000; opacity = 0;
 					case CellType.WALL_OPEN: color = 0xffffff; opacity = 0.1;
