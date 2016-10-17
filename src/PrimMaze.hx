@@ -14,6 +14,8 @@ class PrimMaze
 	public var entrance(default, null):Cell;
 	public var cells(default, null):Array<Array<Cell>>;
 	
+	
+	
 	public function new(width:Int, height:Int, x0:Int, x1:Int, y1:Int)
 	{
 		this.x0 = x0;
@@ -21,16 +23,43 @@ class PrimMaze
 		this.y1 = y1;
 		this.width = width;
 		this.height = height;
-		gridColoring();
+		gridColoring(x0, x1, y1);
 		generate();
 	}
 	
-	function gridColoring()
+	
+	
+	public function gridColoring(x0:Int, x1:Int, y1:Int):Array<Array<Int>>
 	{
+		
+		var lookup:Array<Array<Int>>;
+		
+		var m = x0 * y1;
+		var	n = x0;
+		
+		for (u in 0...n)
+		{
+			for (v in 0...m)
+			{
+				
+			}
+		}
+		
+		
 		var nbColors = Std.int(Math.abs(x0 * y1));
 		if (nbColors < 3) throw "Grid coloring must have at least 3 colors";
 		
+		var grid:Array<Array<Int>> = [for (i in 0...width)[]];
 		
+		for (x in width)
+		{
+			for (y in height)
+			{
+				grid[x][y] = 
+			}
+		}
+		
+		return grid;
 	}
 	
 	public function generate():Array<Array<Cell>>
