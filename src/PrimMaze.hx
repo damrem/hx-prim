@@ -30,6 +30,7 @@ class PrimMaze
 		{
 			colorToCellTypeStrategy = function(color:Int):Int
 			{
+				
 				switch(color)
 				{
 					case 0: return CellType.PILLAR;
@@ -93,7 +94,7 @@ class PrimMaze
 	
 	public function generate(x0:Int, x1:Int, y1:Int):Array<Array<Cell>>
 	{
-		cells = [for (i in 0...width)[]];
+		cells = [for (i in 0...height)[]];
 		
 		var colorGrid = gridColoring(x0, x1, y1);
 		
@@ -103,8 +104,9 @@ class PrimMaze
 			for (x in 0... row.length)
 			{
 				cells[y][x] = new Cell(x, y, colorToCellTypeStrategy(row[x]));
+				//cells[y][x] = new Cell(x, y, row[x] % 3);
 			}
-			trace(row);
+			//trace(row);
 		}
 	
 		

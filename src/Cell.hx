@@ -16,4 +16,9 @@ class Cell
 		this.y = y;
 		this.type = type;
 	}
+	
+	public function toString():String
+	{
+		return ""+type;
+	}
 }
