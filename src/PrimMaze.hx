@@ -6,25 +6,47 @@ package;
  */
 class PrimMaze
 {
-	public var x0(default, null):Int;
-	public var x1(default, null):Int;
-	public var y1(default, null):Int;
+	//public var x0(default, null):Int;
+	//public var x1(default, null):Int;
+	//public var y1(default, null):Int;
 	public var width(default, null):Int;
 	public var height(default, null):Int;
 	public var entrance(default, null):Cell;
 	public var cells(default, null):Array<Array<Cell>>;
 	
+	public var colorToCellTypeStrategy:Int->Int;
 	
 	
-	public function new(width:Int, height:Int, x0:Int, x1:Int, y1:Int)
+	
+	public function new(width:Int, height:Int, x0:Int, x1:Int, y1:Int, ?colorToCellTypeStrategy:Int->Int)
 	{
-		this.x0 = x0;
-		this.x1 = x1;
-		this.y1 = y1;
+		//this.x0 = x0;
+		//this.x1 = x1;
+		//this.y1 = y1;
 		this.width = width;
 		this.height = height;
+		
+		if (colorToCellTypeStrategy == null)
+		{
+			colorToCellTypeStrategy = function(color:Int):Int
+			{
+				switch(color)
+				{
+					case 0: return CellType.PILLAR;
+					case 1: return CellType.WALL_CLOSED;
+					case 2: return CellType.WALL_CLOSED;
+					case 3: return CellType.ROOM;
+				}
+				return -1;
+				
+			}
+		}
+		this.colorToCellTypeStrategy = colorToCellTypeStrategy;
+		
 		gridColoring(x0, x1, y1);
-		generate();
+		generate(x0, x1, y1);
+		
+		
 	}
 	
 	
@@ -32,59 +54,68 @@ class PrimMaze
 	public function gridColoring(x0:Int, x1:Int, y1:Int):Array<Array<Int>>
 	{
 		
-		var lookup:Array<Array<Int>>;
+		var grid:Array<Array<Int>> = [];
 		
 		var m = x0 * y1;
 		var	n = x0;
 		
-		for (u in 0...n)
+		var firstOfItsKind = 0;
+		
+		for (y in 0...height)
 		{
-			for (v in 0...m)
+			grid[y] = [];
+			for (x in 0...width)
 			{
-				
-			}
-		}
-		
-		
-		var nbColors = Std.int(Math.abs(x0 * y1));
-		if (nbColors < 3) throw "Grid coloring must have at least 3 colors";
-		
-		var grid:Array<Array<Int>> = [for (i in 0...width)[]];
-		
-		for (x in width)
-		{
-			for (y in height)
-			{
-				grid[x][y] = 
+				if (x < x0 && y < y1)
+				{
+					grid[y][x] = firstOfItsKind;
+					firstOfItsKind++;
+				}
+				else if (x >= x0 && y < y1)
+				{
+					grid[y][x] = grid[y][x - x0];
+				}
+				else if (x < x1 && y >= y1)
+				{
+					grid[y][x] = grid[y - y1][x + x0 - x1];
+				}
+				else if (x>=x1&&y>=y1)
+				{
+					grid[y][x] = grid[y - y1][x - x1];
+				}
 			}
 		}
 		
 		return grid;
 	}
 	
-	public function generate():Array<Array<Cell>>
+	
+	
+	public function generate(x0:Int, x1:Int, y1:Int):Array<Array<Cell>>
 	{
 		cells = [for (i in 0...width)[]];
+		
+		var colorGrid = gridColoring(x0, x1, y1);
+		
+		for (y in 0... colorGrid.length)
+		{
+			var row = colorGrid[y];
+			for (x in 0... row.length)
+			{
+				cells[y][x] = new Cell(x, y, colorToCellTypeStrategy(row[x]));
+			}
+			trace(row);
+		}
+	
+		
 		
 		var path = [];
 		var walls = [];
 		
-		for (y in 0...height)
-		{
-			for (x in 0...width)
-			{
-				var type:Int;
-				if (x % 2 == 0 && y % 2 == 0) type = CellType.PILLAR;//PILLAR
-				else if ((x % 2 == 0 && y % 2 == 1)|| (x % 2 == 1 && y % 2 == 0))	type = CellType.WALL_CLOSED;//CLOSED WALL
-				else type = CellType.ROOM;//ROOM
-				cells[x][y] = new Cell(x, y, type);
-			}
-		}
-		
 		entrance = null;
 		while (entrance == null)
 		{
-			var cell = cells[1 + Std.random(width - 1)][1 + Std.random(height - 1)];
+			var cell = cells[1 + Std.random(height - 1)][1 + Std.random(width - 1)];
 			if (cell.type == CellType.ROOM)
 			{
 				entrance = cell;
@@ -122,10 +153,10 @@ class PrimMaze
 	{
 		var cells:Array<Cell> = [];
 		
-		if (cell.y > 0)	cells.push(maze[cell.x][cell.y - 1]);
-		if (cell.x < width - 1)	cells.push(maze[cell.x + 1][cell.y]);
-		if (cell.y < height - 1)	cells.push(maze[cell.x][cell.y + 1]);
-		if (cell.x > 0)	cells.push(maze[cell.x - 1][cell.y]);
+		if (cell.y > 0)	cells.push(maze[cell.y - 1][cell.x]);
+		if (cell.x < width - 1)	cells.push(maze[cell.y][cell.x + 1]);
+		if (cell.y < height - 1)	cells.push(maze[cell.y + 1][cell.x]);
+		if (cell.x > 0)	cells.push(maze[cell.y][cell.x - 1]);
 		
 		return cells.filter(function(cell)
 		{
