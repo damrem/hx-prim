@@ -18,7 +18,7 @@ class PrimMaze
 		generate();
 	}
 	
-	public function generate():Array<Array<Cell>>
+	function generate():Array<Array<Cell>>
 	{
 		cells = [for (i in 0...width)[]];
 		
@@ -49,10 +49,24 @@ class PrimMaze
 		path.push(entrance);
 		
 		walls = walls.concat(getAdjacentCells(cells, entrance, [CellType.WALL_OPEN, CellType.WALL_CLOSED]));
-		
+		var count:Int = 0;
+		var flag = true;
 		while (walls.length > 0)
 		{
-			var wall = walls[Std.random(walls.length)];
+			//var wall = walls[Std.random(walls.length)];
+			var wall;
+			if (flag)
+			{
+				wall = walls[0];
+			}
+			else {
+				wall = walls[walls.length - 1];
+			}
+			flag = !flag;
+			
+			/*wall = walls[Std.int(Math.min(count % 8, walls.length - 1))];
+			count++;*/
+			
 			var adjacentRooms = getAdjacentCells(cells, wall, [CellType.ROOM]);
 			if (adjacentRooms.length >= 2)
 			{
