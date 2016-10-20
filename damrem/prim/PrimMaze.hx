@@ -1,4 +1,5 @@
-package;
+package damrem.prim;
+import damrem.prim.Cell;
 
 /**
  * ...
@@ -8,8 +9,8 @@ class PrimMaze
 {
 	public var width(default, null):Int;
 	public var height(default, null):Int;
-	public var entrance(default, null):Cell;
-	public var cells(default, null):Array<Array<Cell>>;
+	public var entrance(default, null):damrem.prim.Cell;
+	public var cells(default, null):Array<Array<damrem.prim.Cell>>;
 	
 	public function new(width:Int, height:Int)
 	{
@@ -18,7 +19,7 @@ class PrimMaze
 		generate();
 	}
 	
-	function generate():Array<Array<Cell>>
+	function generate():Array<Array<damrem.prim.Cell>>
 	{
 		cells = [for (i in 0...width)[]];
 		
@@ -33,7 +34,7 @@ class PrimMaze
 				if (x % 2 == 0 && y % 2 == 0) type = CellType.PILLAR;//PILLAR
 				else if ((x % 2 == 0 && y % 2 == 1)|| (x % 2 == 1 && y % 2 == 0))	type = CellType.WALL_CLOSED;//CLOSED WALL
 				else type = CellType.ROOM;//ROOM
-				cells[x][y] = new Cell(x, y, type);
+				cells[x][y] = new damrem.prim.Cell(x, y, type);
 			}
 		}
 		
@@ -49,23 +50,9 @@ class PrimMaze
 		path.push(entrance);
 		
 		walls = walls.concat(getAdjacentCells(cells, entrance, [CellType.WALL_OPEN, CellType.WALL_CLOSED]));
-		var count:Int = 0;
-		var flag = true;
 		while (walls.length > 0)
 		{
-			//var wall = walls[Std.random(walls.length)];
-			var wall;
-			if (flag)
-			{
-				wall = walls[0];
-			}
-			else {
-				wall = walls[walls.length - 1];
-			}
-			flag = !flag;
-			
-			/*wall = walls[Std.int(Math.min(count % 8, walls.length - 1))];
-			count++;*/
+			var wall = walls[Std.random(walls.length)];
 			
 			var adjacentRooms = getAdjacentCells(cells, wall, [CellType.ROOM]);
 			if (adjacentRooms.length >= 2)
@@ -88,9 +75,9 @@ class PrimMaze
 		return cells;
 	}
 	
-	function getAdjacentCells(maze:Array<Array<Cell>>, cell:Cell, types:Array<Int>):Array<Cell>
+	function getAdjacentCells(maze:Array<Array<damrem.prim.Cell>>, cell:damrem.prim.Cell, types:Array<Int>):Array<damrem.prim.Cell>
 	{
-		var cells:Array<Cell> = [];
+		var cells:Array<damrem.prim.Cell> = [];
 		
 		if (cell.y > 0)	cells.push(maze[cell.x][cell.y - 1]);
 		if (cell.x < width - 1)	cells.push(maze[cell.x + 1][cell.y]);

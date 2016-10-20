@@ -1,0 +1,10 @@
+{
+	"name": "hxprim",
+	"url": "https://github.com/damrem/hx-prim",
+	"license": "MIT",
+	"tags": ["game", "openfl", "flash", "html5", "neko", "cpp", "android", "ios", "cross"],
+	"description": "Prim's algorithm",
+	"version": "0.0.2",
+	"releasenote": "Simple algorithm, random wall selection, grid coloring fixed at (2, 0, 0, 2).",
+	"contributors": ["damrem"]
+}
